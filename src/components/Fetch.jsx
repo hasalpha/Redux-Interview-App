@@ -6,17 +6,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectValues, fetch, del } from "../features/counter/counterSlice";
 import { useState, useEffect } from "react";
 export default function Fetch(props) {
-  const [details, setDetails] = useState();
-  const [cancel, setCancel] = useState(false);
+  const [details, setDetails] = useState(null);
   const [time, setTime] = useState(10);
   const [intervalId, setIntervalId] = useState(0);
   const [timeoutId, setTimeoutId] = useState(0);
   const [usersToDelete, setUsersToDelete] = useState([]);
   const values = useSelector(selectValues);
   const dispatch = useDispatch();
-  useEffect(() => {
-    clearInterval(intervalId);
-  }, [details]);
   const handleClick = async (e) => {
     let res = await axios.get("https://randomuser.me/api/?results=50");
     dispatch(fetch(res.data.results));
@@ -60,10 +56,10 @@ export default function Fetch(props) {
                 src={details?.picture.large}
               />
               <pre>{details?.email}</pre>
-              {cancel === false ? (
+              {usersToDelete.includes(details?.email) === false ? (
                 <button
                   onClick={() => {
-                    setCancel((val) => true);
+                    setUsersToDelete((val) => [...val, details?.email]);
                     const id = setInterval(() => {
                       if (time < 0) {
                         clearInterval(id);
@@ -72,12 +68,14 @@ export default function Fetch(props) {
                     }, 1000);
                     setIntervalId((val) => id);
                     const tid = setTimeout(() => {
-                      clearInterval(intervalId);
-                      setCancel((val) => false);
+                      clearInterval(id);
                       setTime((val) => 10);
                       setDetails((val) => null);
                       dispatch(del(details?.email));
-                    }, 10500);
+                      setUsersToDelete((val) =>
+                        val.filter((el) => el !== details?.email)
+                      );
+                    }, 10000);
                     setTimeoutId((val) => tid);
                   }}
                 >
@@ -86,9 +84,11 @@ export default function Fetch(props) {
               ) : (
                 <button
                   onClick={() => {
+                    setUsersToDelete((val) =>
+                      val.filter((el) => el !== details?.email)
+                    );
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
-                    setCancel((val) => false);
                     setTime((val) => 10);
                   }}
                 >
