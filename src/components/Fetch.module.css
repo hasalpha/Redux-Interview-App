@@ -33,10 +33,19 @@
   color: white;
 }
 .profile {
+  margin-top:1rem;
   border-radius: 50%;
   width: 10rem;
 }
 .timer {
- color:brown;
- background-color: blue;
+  color: brown;
+  background-color: blue;
+}
+.nameRow {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-content: stretch;
+  align-items: flex-end;
 }

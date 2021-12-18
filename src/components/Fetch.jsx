@@ -36,19 +36,20 @@ export default function Fetch(props) {
         <div className={styles.container}>
           <div className={styles.nameList}>
             {values.map((el, i) => (
-              <p
-                id={el["email"]}
-                key={el["login"]["uuid"]}
-                className={`${styles.names} ${
-                  details?.email === el["email"] ? styles.activeName : ""
-                }`}
-                onClick={handleDetails}
-              >
-                {el["name"]["last"]}{" "}
-                <span className={styles.timer}>
-                  {usersToDelete.includes(el.email) && time}
-                </span>
-              </p>
+              <div key={el["login"]["uuid"]} className={styles.nameRow}>
+                <p
+                  id={el["email"]}
+                  className={`${styles.names} ${
+                    details?.email === el["email"] ? styles.activeName : ""
+                  }`}
+                  onClick={handleDetails}
+                >
+                  {el["name"]["last"]}{" "}
+                  <span className={styles.timer}>
+                    {usersToDelete.includes(el.email) && time}
+                  </span>
+                </p>
+              </div>
             ))}
           </div>
           {details && (
@@ -58,7 +59,12 @@ export default function Fetch(props) {
                 className={styles.profile}
                 src={details?.picture.large}
               />
+              <pre>
+                {details?.name.title}.{details?.name.first} {details?.name.last}
+              </pre>
               <pre>{details?.email}</pre>
+              <pre>{details?.phone}</pre>
+              <pre>{details?.cell}</pre>
               {usersToDelete.includes(details?.email) === false ? (
                 <button
                   onClick={() => {
