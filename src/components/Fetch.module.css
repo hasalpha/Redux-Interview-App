@@ -1,0 +1,38 @@
+.button {
+  padding: 1rem;
+  margin: 0.5rem;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.5rem 0 0.5rem;
+}
+.names {
+  margin: 0 0.5rem;
+  cursor: pointer;
+  width: max-content;
+}
+.nameList {
+  min-width: 6rem;
+}
+.names:hover {
+  text-decoration: underline;
+  color: blue;
+}
+.container {
+  display: flex;
+}
+.details {
+  width: 100%;
+  text-align: center;
+  word-break: break-all;
+  margin-right: 1rem;
+}
+.activeName{
+  background-color: rgb(66, 165, 144);
+  color:white;
+}
+.profile{
+  border-radius:50%;
+  width:10rem;
+}
