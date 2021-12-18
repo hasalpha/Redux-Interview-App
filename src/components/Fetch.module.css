@@ -28,11 +28,15 @@
   word-break: break-all;
   margin-right: 1rem;
 }
-.activeName{
+.activeName {
   background-color: rgb(66, 165, 144);
-  color:white;
+  color: white;
 }
-.profile{
-  border-radius:50%;
-  width:10rem;
+.profile {
+  border-radius: 50%;
+  width: 10rem;
+}
+.timer {
+ color:brown;
+ background-color: blue;
 }

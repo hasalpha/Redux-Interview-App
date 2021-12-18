@@ -44,7 +44,10 @@ export default function Fetch(props) {
                 }`}
                 onClick={handleDetails}
               >
-                {el["name"]["last"]}
+                {el["name"]["last"]}{" "}
+                <span className={styles.timer}>
+                  {usersToDelete.includes(el.email) && time}
+                </span>
               </p>
             ))}
           </div>
@@ -70,7 +73,9 @@ export default function Fetch(props) {
                     const tid = setTimeout(() => {
                       clearInterval(id);
                       setTime((val) => 10);
-                      setDetails((val) => null);
+                      setDetails((val) =>
+                        val.email === details?.email ? null : val
+                      );
                       dispatch(del(details?.email));
                       setUsersToDelete((val) =>
                         val.filter((el) => el !== details?.email)
