@@ -9,7 +9,12 @@ export const counterSlice = createSlice({
   initialState,
   reducers: {
     fetch: (state, action) => {
-      state.value.push(...action.payload);
+      // const newAction = [...action];
+      const payload = action.payload.map((el, i)=>{
+        const newEl = {...el, index:i};
+        return newEl;
+      });
+      state.value.push(...payload);
     },
     del: (state, action) => {
       state.value = state.value.filter(

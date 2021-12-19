@@ -7,7 +7,7 @@ import { selectValues, fetch, del } from "../features/counter/counterSlice";
 import { useState, useEffect } from "react";
 export default function Fetch(props) {
   const [details, setDetails] = useState(null);
-  const [time, setTime] = useState(10);
+  const [time, setTime] = useState(Array.from({ length: 50 }, (el) => 10));
   const [intervalId, setIntervalId] = useState(0);
   const [timeoutId, setTimeoutId] = useState(0);
   const [usersToDelete, setUsersToDelete] = useState([]);
@@ -18,12 +18,19 @@ export default function Fetch(props) {
     dispatch(fetch(res.data.results));
   };
   const handleDetails = (e) => {
-    const [user] = values.filter((el) => el.email === e.target.id);
-    setDetails((details) => user);
+    let u = null;
+    for (let i = 0; i < values.length; i++) {
+      if (values[i]["email"] === e.target.id) {
+        u = { ...values[i]};
+        break;
+      }
+    }
+    setDetails((details) => u);
   };
   const handleDelete = (e) => {
     dispatch(del());
   };
+  const index = details?.index;
   return (
     <>
       <div className={styles.navbar}>
@@ -46,7 +53,7 @@ export default function Fetch(props) {
                 >
                   {el["name"]["last"]}{" "}
                   <span className={styles.timer}>
-                    {usersToDelete.includes(el.email) && time}
+                    {usersToDelete.includes(el.email) && time[el?.index]}
                   </span>
                 </p>
               </div>
@@ -70,15 +77,18 @@ export default function Fetch(props) {
                   onClick={() => {
                     setUsersToDelete((val) => [...val, details?.email]);
                     const id = setInterval(() => {
-                      if (time < 0) {
+                      if (time[details.index] < 0) {
                         clearInterval(id);
                       }
-                      setTime((val) => val - 1);
+                      setTime((val) => {
+                        const newVal = [...val];
+                        newVal[details.index] -= 1;
+                        return newVal;
+                      });
                     }, 1000);
                     setIntervalId((val) => id);
                     const tid = setTimeout(() => {
                       clearInterval(id);
-                      setTime((val) => 10);
                       setDetails((val) =>
                         val.email === details?.email ? null : val
                       );
@@ -100,10 +110,15 @@ export default function Fetch(props) {
                     );
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
-                    setTime((val) => 10);
+                    setTime((val) => {
+                        const newVal = [...val];
+                        newVal[details.index] = 10;
+                        return newVal;
+                      });
+
                   }}
                 >
-                  Cancel {time}
+                  Cancel {time[details?.index]}
                 </button>
               )}
             </div>
