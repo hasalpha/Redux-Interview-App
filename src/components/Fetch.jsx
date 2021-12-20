@@ -6,12 +6,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectValues, fetch, del } from "../features/counter/counterSlice";
 import { useState, useEffect } from "react";
 export default function Fetch(props) {
+  const values = useSelector(selectValues);
   const [details, setDetails] = useState(null);
   const [time, setTime] = useState(Array.from({ length: 50 }, (el) => 10));
-  const [intervalId, setIntervalId] = useState(0);
-  const [timeoutId, setTimeoutId] = useState(0);
+  const [intervalId, setIntervalId] = useState(
+    Array.from({ length: 50 }, (el) => 0)
+  );
+  const [timeoutId, setTimeoutId] = useState(
+    Array.from({ length: 50 }, (el) => 0)
+  );
   const [usersToDelete, setUsersToDelete] = useState([]);
-  const values = useSelector(selectValues);
   const dispatch = useDispatch();
   const handleClick = async (e) => {
     let res = await axios.get("https://randomuser.me/api/?results=50");
@@ -21,7 +25,7 @@ export default function Fetch(props) {
     let u = null;
     for (let i = 0; i < values.length; i++) {
       if (values[i]["email"] === e.target.id) {
-        u = { ...values[i]};
+        u = { ...values[i] };
         break;
       }
     }
@@ -86,7 +90,11 @@ export default function Fetch(props) {
                         return newVal;
                       });
                     }, 1000);
-                    setIntervalId((val) => id);
+                    setIntervalId((val) => {
+                      const newVal = [...val];
+                      newVal[details?.index] = id;
+                      return newVal;
+                    });
                     const tid = setTimeout(() => {
                       clearInterval(id);
                       setDetails((val) =>
@@ -97,7 +105,11 @@ export default function Fetch(props) {
                         val.filter((el) => el !== details?.email)
                       );
                     }, 10000);
-                    setTimeoutId((val) => tid);
+                    setTimeoutId((val) => {
+                      const newVal = [...val];
+                      newVal[details?.index] = tid;
+                      return newVal;
+                    });
                   }}
                 >
                   Delete
@@ -108,14 +120,13 @@ export default function Fetch(props) {
                     setUsersToDelete((val) =>
                       val.filter((el) => el !== details?.email)
                     );
-                    clearInterval(intervalId);
-                    clearTimeout(timeoutId);
+                    clearInterval(intervalId[details?.index]);
+                    clearTimeout(timeoutId[details?.index]);
                     setTime((val) => {
-                        const newVal = [...val];
-                        newVal[details.index] = 10;
-                        return newVal;
-                      });
-
+                      const newVal = [...val];
+                      newVal[details.index] = 10;
+                      return newVal;
+                    });
                   }}
                 >
                   Cancel {time[details?.index]}
